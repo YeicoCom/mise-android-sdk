@@ -66,8 +66,9 @@ function parse_android_sdk_metadata() {
 		sort_by(.revision.major, .revision.minor, .revision.micro, .revision.preview // 99)
 	'
 
+	echo "${parse_command}" > /tmp/expression.yq
 	ANDROID_SDK_PACKAGE_NAME="${android_sdk_package_name}" \
-		yq --exit-status --input-format xml --output-format yaml --xml-keep-namespace=false "${parse_command}" <<< "${android_sdk_metadata_xml}" ||
+		yq --exit-status --input-format xml --output-format yaml --xml-keep-namespace=false --from-file /tmp/expression.yq <<< "${android_sdk_metadata_xml}" ||
 		{
 			error "Failed to parse Android SDK tool metadata"
 			return 2

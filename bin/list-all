@@ -24,9 +24,10 @@ function main() {
 		}
 
 	# Extract available Android SDK tool versions
+	echo '.[] | .+@path | split(";") | .[1]' > /tmp/expression.yq
 	local tool_versions_raw
 	tool_versions_raw="$(
-		yq --exit-status --input-format yaml --output-format yaml --unwrapScalar '.[] | .+@path | split(";") | .[1]' <<< "${android_sdk_tool_metadata}"
+		yq --exit-status --input-format yaml --output-format yaml --unwrapScalar --from-file /tmp/expression.yq <<< "${android_sdk_tool_metadata}"
 	)" || {
 		error "Could not extract Android SDK tool versions"
 		return 4

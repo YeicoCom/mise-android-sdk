@@ -68,10 +68,11 @@ function download_release() {
 	'
 
 	local android_sdk_tool_archive_metadata_yaml
+	echo "${android_sdk_tool_metadata_parse_command}" > /tmp/expression.yq
 	android_sdk_tool_archive_metadata_yaml="$(
 		ANDROID_SDK_PACKAGE_NAME="${android_sdk_package_name}" ANDROID_SDK_PACKAGE_VERSION="${version}" \
 			ANDROID_SDK_OS="${android_sdk_os}" ANDROID_SDK_ARCH="${android_sdk_arch}" \
-			yq --exit-status --input-format yaml --output-format yaml "${android_sdk_tool_metadata_parse_command}" <<< "${android_sdk_tool_metadata}"
+			yq --exit-status --input-format yaml --output-format yaml --from-file /tmp/expression.yq <<< "${android_sdk_tool_metadata}"
 	)" || {
 		error "Could not find Android SDK package metadata"
 		return 6
